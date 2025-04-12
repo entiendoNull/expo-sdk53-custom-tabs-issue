@@ -1,39 +1,50 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { SafeAreaView, Text, StyleSheet } from "react-native";
+import { Tabs, TabList, TabTrigger, TabSlot } from "expo-router/ui";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
+// Defining the layout of the custom tab navigator
+export default function Layout() {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Tabs>
+        <TabSlot />
+        <TabList style={styles.tabList}>
+          <TabTrigger name="home" href="/(home)" style={styles.tabTrigger}>
+            <Text>Home</Text>
+          </TabTrigger>
+          <TabTrigger
+            name="settings"
+            href="/settings"
+            style={styles.tabTrigger}
+          >
+            <Text>Settings</Text>
+          </TabTrigger>
+        </TabList>
+      </Tabs>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  tabList: {
+    justifyContent: "space-around",
+    height: 40
+  },
+  tabTrigger: {
+    flex: 1,
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center"
+  }
+});
+
+// Expo router default tabs
+// import { Tabs } from "expo-router";
+
+// export default function Layout() {
+//   return (
+//     <Tabs screenOptions={{ headerShown: false }}>
+//       <Tabs.Screen name="(home)" />
+//       <Tabs.Screen name="settings" />
+//     </Tabs>
+//   );
+// }
